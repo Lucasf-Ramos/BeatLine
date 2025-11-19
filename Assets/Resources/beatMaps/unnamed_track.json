@@ -1,0 +1,139 @@
+{
+    "track_id": "",
+    "title": "",
+    "bpm": 120.0,
+    "time_signature": "7/8",
+    "swing": 0.0,
+    "offset_ms": 0.0,
+    "Notes": [
+        {
+            "index": 0,
+            "time": 0.0,
+            "instrument_id": "",
+            "length": 0.5,
+            "lengthType": 2,
+            "velocity": 1.0,
+            "event_type": "note"
+        },
+        {
+            "index": 1,
+            "time": 0.5,
+            "instrument_id": "",
+            "length": 0.5,
+            "lengthType": 2,
+            "velocity": 1.0,
+            "event_type": "rest"
+        },
+        {
+            "index": 2,
+            "time": 1.0,
+            "instrument_id": "",
+            "length": 0.5,
+            "lengthType": 2,
+            "velocity": 1.0,
+            "event_type": "note"
+        },
+        {
+            "index": 3,
+            "time": 1.5,
+            "instrument_id": "",
+            "length": 0.5,
+            "lengthType": 2,
+            "velocity": 1.0,
+            "event_type": "note"
+        },
+        {
+            "index": 4,
+            "time": 2.0,
+            "instrument_id": "",
+            "length": 0.5,
+            "lengthType": 2,
+            "velocity": 1.0,
+            "event_type": "rest"
+        },
+        {
+            "index": 5,
+            "time": 2.5,
+            "instrument_id": "",
+            "length": 0.5,
+            "lengthType": 2,
+            "velocity": 1.0,
+            "event_type": "note"
+        },
+        {
+            "index": 6,
+            "time": 3.0,
+            "instrument_id": "",
+            "length": 0.5,
+            "lengthType": 2,
+            "velocity": 1.0,
+            "event_type": "rest"
+        },
+        {
+            "index": 7,
+            "time": 3.5,
+            "instrument_id": "",
+            "length": 0.5,
+            "lengthType": 2,
+            "velocity": 1.0,
+            "event_type": "note"
+        },
+        {
+            "index": 8,
+            "time": 4.0,
+            "instrument_id": "",
+            "length": 0.5,
+            "lengthType": 2,
+            "velocity": 1.0,
+            "event_type": "rest"
+        },
+        {
+            "index": 9,
+            "time": 4.5,
+            "instrument_id": "",
+            "length": 0.5,
+            "lengthType": 2,
+            "velocity": 1.0,
+            "event_type": "rest"
+        },
+        {
+            "index": 10,
+            "time": 5.0,
+            "instrument_id": "",
+            "length": 0.5,
+            "lengthType": 2,
+            "velocity": 1.0,
+            "event_type": "note"
+        },
+        {
+            "index": 11,
+            "time": 5.5,
+            "instrument_id": "",
+            "length": 0.5,
+            "lengthType": 2,
+            "velocity": 1.0,
+            "event_type": "note"
+        },
+        {
+            "index": 12,
+            "time": 6.0,
+            "instrument_id": "",
+            "length": 0.5,
+            "lengthType": 2,
+            "velocity": 1.0,
+            "event_type": "rest"
+        },
+        {
+            "index": 13,
+            "time": 6.5,
+            "instrument_id": "",
+            "length": 0.5,
+            "lengthType": 2,
+            "velocity": 1.0,
+            "event_type": "rest"
+        }
+    ],
+    "audioClip": {
+        "instanceID": 0
+    }
+}
