@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 
@@ -93,7 +94,7 @@ public class beatMapController : MonoBehaviour
         compassCoroutine = StartCoroutine(Compass());
         previewCoroutine = StartCoroutine(PreviewLoop());
        
-        playCoroutine = StartCoroutine(PlayLoop());
+       // playCoroutine = StartCoroutine(PlayLoop());
 
         yield break;
     }
@@ -127,78 +128,52 @@ public class beatMapController : MonoBehaviour
         }
     }
 
-   IEnumerator PreviewLoop()
+  IEnumerator PreviewLoop()
 {
     var notes = track.Notes;
     if (notes == null || notes.Count == 0)
         yield break;
 
-    // garante ordenação
     notes.Sort((a, b) => a.time.CompareTo(b.time));
 
     int previewIndex = 0;
-    // tempo absoluto (em segundos) do preview, relativo ao songStartTime
-    double currentPreviewAbs = Time.time - songStartTime + previewOffset;
-    // marque o último tempo processado ligeiramente antes do atual para processar notas que já caem no intervalo inicial
-    double lastPreviewAbs = currentPreviewAbs - 0.0001;
-
-    // ciclo de qual repetição do loop estamos processando (0 = primeira)
-    long previewCycle = (long)Mathf.Floor((float)(lastPreviewAbs / loopDuration));
-    if (previewCycle < 0) previewCycle = 0;
+    float lastT = 0f;
 
     while (true)
     {
-        // tempo absoluto atual do preview (pode crescer > loopDuration; usamos valor absoluto para evitar re-triggering)
-        currentPreviewAbs = Time.time - songStartTime + previewOffset;
+        // Tempo do preview: igual ao playLoop, porém com offset
+        float t = (Time.time - songStartTime + previewOffset) % loopDuration;
 
-      
-        while (true)
+        // Detecta loop
+        if (t < lastT)
+            previewIndex = 0;
+
+        // Toca notas deste ciclo
+        while (previewIndex < notes.Count &&
+               notes[previewIndex].time <= t)
         {
-            if (previewIndex >= notes.Count)
+            var n = notes[previewIndex];
+            if (n.event_type != "rest")
             {
-                // avançamos ao próximo ciclo (voltamos ao primeiro note, mas com cycle+1)
-                previewIndex = 0;
-                previewCycle++;
+                OnBeatPreview?.Invoke(n);
+                StartCoroutine(playNote(n));
             }
-
-            double noteAbsTime = notes[previewIndex].time + previewCycle * loopDuration;
-
-            // se a próxima nota absoluta está no passado em relação ao currentPreviewAbs -> disparamos
-            if (noteAbsTime <= currentPreviewAbs)
-            {
-                // Evita re-disparos: só disparamos se noteAbsTime > lastPreviewAbs
-                if (noteAbsTime > lastPreviewAbs)
-                {
-                    var n = notes[previewIndex];
-                    if (n.event_type != "rest")
-                    {
-                        OnBeatPreview?.Invoke(n);
-                        //yield return new WaitForSeconds(n.length);
-                    }
-                        
-                   
-                }
-
-                // consumimos essa nota e vamos para a próxima
-                previewIndex++;
-                // continue para verificar se mais notas caem no intervalo atual
-                continue;
-            }
-            else
-            {
-                // a próxima nota ainda é no futuro; saia do loop de consumo
-                break;
-            }
+               
+         //   yield return new WaitForSeconds(n.length);
+            previewIndex++;
         }
 
-        // atualiza o marcador do último tempo processado
-        lastPreviewAbs = currentPreviewAbs;
-
+        lastT = t;
         yield return null;
     }
 }
-
-
+    IEnumerator playNote(Note n)
+    {
+        yield return new WaitForSeconds(previewOffset);
+        
+        OnBeatPlayed?.Invoke(n);
+    }
+/*
    IEnumerator PlayLoop()
 {
     var notes = track.Notes;
@@ -229,19 +204,19 @@ public class beatMapController : MonoBehaviour
         {
             var n = notes[playIndex];
             if (n.event_type != "rest")
-            {
-                    OnBeatPlayed?.Invoke(n);
-                    yield return new WaitForSeconds(n.length);
-            }
+                OnBeatPlayed?.Invoke(n);
+                    
+            
                 
-
+            yield return new WaitForSeconds(n.length);
             playIndex++;
         }
 
         lastT = t;
         yield return null;
     }
-}
+     yield return null;
+}*/
 
 
 

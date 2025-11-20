@@ -17,11 +17,14 @@ MonoBehaviour:
     volume: 70
     pitch: 1
     audio: {fileID: 8300000, guid: adb6c00283b7aad46befdacff790cd0d, type: 3}
+    startPoint: 0
   - name: Metronome
     volume: 60
     pitch: 1.5
     audio: {fileID: 8300000, guid: adb6c00283b7aad46befdacff790cd0d, type: 3}
+    startPoint: 0
   - name: Beat
     volume: 70
     pitch: 0.8
-    audio: {fileID: 8300000, guid: 94d1525c251626c4bbcac392ee101541, type: 3}
+    audio: {fileID: 8300000, guid: 8610ed43b358b9a4fa5677e32de472f8, type: 3}
+    startPoint: 0.099

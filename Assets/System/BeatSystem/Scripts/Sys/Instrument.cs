@@ -8,6 +8,6 @@ public class Instrument
     public float volume = 1;
     public float pitch = 1;
     public AudioClip audio;
-
+    public float startPoint = 0;
    
 }

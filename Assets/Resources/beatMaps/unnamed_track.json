@@ -1,7 +1,7 @@
 {
     "track_id": "",
     "title": "",
-    "bpm": 90.0,
+    "bpm": 120.0,
     "time_signature": "4/4",
     "swing": 0.0,
     "offset_ms": 0.0,
@@ -10,73 +10,73 @@
             "index": 0,
             "time": 0.0,
             "instrument_id": "",
-            "length": 0.6666666865348816,
+            "length": 0.5,
             "lengthType": 2,
             "velocity": 1.0,
             "event_type": "note"
         },
         {
             "index": 1,
-            "time": 0.6666666865348816,
+            "time": 0.5,
             "instrument_id": "",
-            "length": 0.6666666865348816,
+            "length": 0.5,
             "lengthType": 2,
             "velocity": 1.0,
-            "event_type": "note"
+            "event_type": "rest"
         },
         {
             "index": 2,
-            "time": 1.3333333730697632,
+            "time": 1.0,
             "instrument_id": "",
-            "length": 0.6666666865348816,
+            "length": 0.5,
             "lengthType": 2,
             "velocity": 1.0,
             "event_type": "note"
         },
         {
             "index": 3,
-            "time": 2.0,
+            "time": 1.5,
             "instrument_id": "",
-            "length": 0.6666666865348816,
+            "length": 0.5,
             "lengthType": 2,
             "velocity": 1.0,
-            "event_type": "note"
+            "event_type": "rest"
         },
         {
             "index": 4,
-            "time": 2.6666667461395265,
+            "time": 2.0,
             "instrument_id": "",
-            "length": 0.6666666865348816,
+            "length": 0.5,
             "lengthType": 2,
             "velocity": 1.0,
             "event_type": "note"
         },
         {
             "index": 5,
-            "time": 3.3333334922790529,
+            "time": 2.5,
             "instrument_id": "",
-            "length": 0.6666666865348816,
+            "length": 0.5,
             "lengthType": 2,
             "velocity": 1.0,
-            "event_type": "note"
+            "event_type": "rest"
         },
         {
             "index": 6,
-            "time": 4.0,
+            "time": 3.0,
             "instrument_id": "",
-            "length": 0.6666666865348816,
+            "length": 0.5,
             "lengthType": 2,
             "velocity": 1.0,
             "event_type": "note"
         },
         {
             "index": 7,
-            "time": 4.6666669845581059,
+            "time": 3.5,
             "instrument_id": "",
-            "length": 0.6666666865348816,
+            "length": 0.5,
             "lengthType": 2,
             "velocity": 1.0,
-            "event_type": "note"
+            "event_type": "rest"
         }
     ],
     "audioClip": {
