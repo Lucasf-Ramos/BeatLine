@@ -604,11 +604,11 @@ Transform:
   m_GameObject: {fileID: 398821975}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.493, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0.48800004, y: 0, z: 0}
+  m_LocalScale: {x: 4, y: 0.05, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 862452600}
+  m_Father: {fileID: 815422248}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &459192282
 GameObject:
@@ -797,7 +797,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1251575638}
         m_TargetAssemblyTypeName: beatMapController, Assembly-CSharp
-        m_MethodName: PlayAndStopCompass
+        m_MethodName: playAndStopCompass
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1012,7 +1012,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::noteSpawner
   SpawnPoint: {fileID: 398821976}
-  EndPoint: {fileID: 1577299675}
   HitZone: {fileID: 2009989959}
   movimentCurve:
     serializedVersion: 2
@@ -1048,12 +1047,13 @@ Transform:
   m_GameObject: {fileID: 815422246}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.45, y: -4.68, z: 0}
+  m_LocalPosition: {x: -2.45, y: 3.66, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2009989959}
   - {fileID: 862452600}
+  - {fileID: 398821976}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &862452599
@@ -1083,11 +1083,9 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 2.46, y: 0, z: 0}
-  m_LocalScale: {x: 10, y: 0.05, z: 1}
+  m_LocalScale: {x: 4, y: 0.05, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 398821976}
-  - {fileID: 1577299675}
+  m_Children: []
   m_Father: {fileID: 815422248}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &862452601
@@ -1138,7 +1136,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -1203,9 +1201,9 @@ MonoBehaviour:
     volume: 100
     pitch: 1
     audio: {fileID: 8300000, guid: a1b79dfcc13e8dd42847755173061a85, type: 3}
-  previewOffset: 3
+  previewOffset: 1
   InstrumentSet: {fileID: 11400000, guid: 9973862d292fe874cbc823a28d240892, type: 2}
-  trackJson: {fileID: 4900000, guid: e30a49a591546a84ca38b4300a1432c1, type: 3}
+  trackJson: {fileID: 4900000, guid: d4b5e88049962224e8dba8f2ee682ac2, type: 3}
   track:
     track_id: 
     title: 
@@ -1218,7 +1216,6 @@ MonoBehaviour:
   timer: 0
   barDuration: 0
   beatsInBar: 0
-  beatCont: 0
   currentNote: 0
 --- !u!4 &1251575639
 Transform:
@@ -1449,37 +1446,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1577299674
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1577299675}
-  m_Layer: 0
-  m_Name: EndPoint
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1577299675
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1577299674}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.49249995, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 862452600}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1624037820
 GameObject:
@@ -1959,7 +1925,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

@@ -1,34 +1,44 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using UnityEditor;
 using UnityEngine;
 
 public class beatMapController : MonoBehaviour
 {
 
     public event System.Action<Note> OnBeatPlayed;  // Dispara quando uma nota é tocada
+    public event System.Action<Note> OnBeatPreview;  // 🎵 Evento antecipado (spawn de notas)
+
     public event System.Action OnTrackLooped;       // Dispara quando o loop recomeça
     public event System.Action OnMetronome; //Dispara quando o metronomo tica
 
     public static beatMapController controller;
-    public List<Instrument> instruments;
+    [HideInInspector]public List<Instrument> instruments;
+    public float previewOffset = 0.5f;
+    public bandKit InstrumentSet;
     public TextAsset trackJson;
-    public Track track;
+    [HideInInspector] public Track track;
 
     SoundBox soundBox;
-    double timer = 0;
+    [HideInInspector]public double timer = 0;
     
-    public float barDuration;
-    public int beatsInBar;
-    public int currentNote;
+    [HideInInspector]public float barDuration;
+    [HideInInspector]public int beatsInBar;
+    [HideInInspector]public int beatCont;
+    [HideInInspector]public int currentNote;
     Coroutine compassCoroutine;
-    Coroutine musicCoroutine;
+    Coroutine playCoroutine;
+    Coroutine previewCoroutine;
+    float songStartTime;      // ponto zero do tempo da música
+    float loopDuration;       // duração do ciclo completo
     void Awake()
     {
         controller = this;
         soundBox = GetComponent<SoundBox>();
         barDuration = GetBarDuration(track.time_signature, track.bpm);
         beatsInBar = GetBeatsInBar(track.time_signature);
+        instruments = InstrumentSet.instruments;
 
         if (trackJson != null)
         {
@@ -53,49 +63,189 @@ public class beatMapController : MonoBehaviour
         barDuration = GetBarDuration(track.time_signature, track.bpm);
         beatsInBar = GetBeatsInBar(track.time_signature);
     }
-    public void playAndStopCompass()
-    {
 
-        timer = 0;
+   [ContextMenu("Play")]
+    public void PlayAndStopCompass()
+    {
         if (compassCoroutine == null)
         {
-            compassCoroutine= StartCoroutine(compass());
-            musicCoroutine = StartCoroutine(playing());
+            StartCoroutine(PlayTrack());
         }
         else
         {
-            StopCoroutine(compassCoroutine);
-            StopCoroutine(musicCoroutine);
+            StopAllCoroutines();
             compassCoroutine = null;
-            musicCoroutine = null;
+            previewCoroutine = null;
+            playCoroutine = null;
         }
-        
     }
 
-    public IEnumerator compass()
+    IEnumerator PlayTrack()
     {
-        int barCont = 0;
-        int beatCont = 1;
+        // define o ponto zero da música
+        songStartTime = Time.time;
+
+        // calcula a duração do loop
+        var notes = track.Notes;
+        notes.Sort((a, b) => a.time.CompareTo(b.time));
+        loopDuration = notes[^1].time + notes[^1].length;
+
+        compassCoroutine = StartCoroutine(Compass());
+        previewCoroutine = StartCoroutine(PreviewLoop());
+       
+        playCoroutine = StartCoroutine(PlayLoop());
+
+        yield break;
+    }
+
+    IEnumerator Compass()
+    {
+        int barCount = 0;
+        int beatCount = 0;
 
         while (true)
         {
-           
-            if (timer > barDuration*barCont)
+            float t = Time.time - songStartTime;
+
+            // BAR
+            if (t >= barDuration * barCount)
             {
                 soundBox.instanceSound(0);
-                barCont ++;
+                barCount++;
             }
-            if (timer/beatCont > barDuration/beatsInBar)
+
+            // BEAT
+            float beatInterval = barDuration / beatsInBar;
+            if (t >= beatInterval * beatCount)
             {
                 soundBox.instanceSound(1);
                 OnMetronome?.Invoke();
-                beatCont ++;
+                beatCount++;
             }
-            timer+= Time.deltaTime;
-            yield return 0;   
+
+            yield return null;
         }
-        
     }
+
+   IEnumerator PreviewLoop()
+{
+    var notes = track.Notes;
+    if (notes == null || notes.Count == 0)
+        yield break;
+
+    // garante ordenação
+    notes.Sort((a, b) => a.time.CompareTo(b.time));
+
+    int previewIndex = 0;
+    // tempo absoluto (em segundos) do preview, relativo ao songStartTime
+    double currentPreviewAbs = Time.time - songStartTime + previewOffset;
+    // marque o último tempo processado ligeiramente antes do atual para processar notas que já caem no intervalo inicial
+    double lastPreviewAbs = currentPreviewAbs - 0.0001;
+
+    // ciclo de qual repetição do loop estamos processando (0 = primeira)
+    long previewCycle = (long)Mathf.Floor((float)(lastPreviewAbs / loopDuration));
+    if (previewCycle < 0) previewCycle = 0;
+
+    while (true)
+    {
+        // tempo absoluto atual do preview (pode crescer > loopDuration; usamos valor absoluto para evitar re-triggering)
+        currentPreviewAbs = Time.time - songStartTime + previewOffset;
+
+      
+        while (true)
+        {
+            if (previewIndex >= notes.Count)
+            {
+                // avançamos ao próximo ciclo (voltamos ao primeiro note, mas com cycle+1)
+                previewIndex = 0;
+                previewCycle++;
+            }
+
+            double noteAbsTime = notes[previewIndex].time + previewCycle * loopDuration;
+
+            // se a próxima nota absoluta está no passado em relação ao currentPreviewAbs -> disparamos
+            if (noteAbsTime <= currentPreviewAbs)
+            {
+                // Evita re-disparos: só disparamos se noteAbsTime > lastPreviewAbs
+                if (noteAbsTime > lastPreviewAbs)
+                {
+                    var n = notes[previewIndex];
+                    if (n.event_type != "rest")
+                    {
+                        OnBeatPreview?.Invoke(n);
+                        //yield return new WaitForSeconds(n.length);
+                    }
+                        
+                   
+                }
+
+                // consumimos essa nota e vamos para a próxima
+                previewIndex++;
+                // continue para verificar se mais notas caem no intervalo atual
+                continue;
+            }
+            else
+            {
+                // a próxima nota ainda é no futuro; saia do loop de consumo
+                break;
+            }
+        }
+
+        // atualiza o marcador do último tempo processado
+        lastPreviewAbs = currentPreviewAbs;
+
+        yield return null;
+    }
+}
+
+
+   IEnumerator PlayLoop()
+{
+    var notes = track.Notes;
+    if (notes == null || notes.Count == 0)
+        yield break;
+
+    notes.Sort((a, b) => a.time.CompareTo(b.time));
+
+    int playIndex = 0;
+    float lastT = 0f;
+
+    yield return new WaitForSeconds(previewOffset);
+
+    while (true)
+    {
+        float t = (Time.time - songStartTime) % loopDuration;
+
+        // Detecta loop
+        if (t < lastT)
+        {
+            playIndex = 0;
+            OnTrackLooped?.Invoke();
+        }
+
+        // Toca notas deste ciclo
+        while (playIndex < notes.Count &&
+               notes[playIndex].time <= t)
+        {
+            var n = notes[playIndex];
+            if (n.event_type != "rest")
+            {
+                    OnBeatPlayed?.Invoke(n);
+                    yield return new WaitForSeconds(n.length);
+            }
+                
+
+            playIndex++;
+        }
+
+        lastT = t;
+        yield return null;
+    }
+}
+
+
+
+
 
 
     public static float GetBarDuration(string timeSignature, float bpm)
@@ -142,48 +292,10 @@ public class beatMapController : MonoBehaviour
     // garante que a nota tenha duração mínima
     note.length = Mathf.Max(note.length, beatDuration / 4f);
 }
-    public void playTrack()
-    {
-            StartCoroutine(playing());
-    }
-   public IEnumerator playing()
-    {
-        int i = 0;
-        float timer = 0;
-        var notes = track.Notes;
-        if (notes == null || notes.Count == 0)
-            yield break;
 
-        float loopDuration = notes[^1].time + notes[^1].length; // tempo total do loop
 
-        while (true)
-        {
-            timer += Time.deltaTime;
 
-            // se passou do final do loop, reinicia
-            if (timer > loopDuration)
-            {
-                timer -= loopDuration;
-                i = 0;
-                currentNote=0;
-                OnTrackLooped?.Invoke(); // 🔔 Evento de loop
-            }
 
-            // toca notas no momento certo
-            while (i < notes.Count && notes[i].time <= timer)
-            {
-                if (notes[i].event_type != "rest")
-                {
-                    OnBeatPlayed?.Invoke(notes[i]); // 🔔 Emite o evento com a nota atual
-                }
-
-                i++;
-                currentNote++;
-            }
-
-            yield return null;
-        }
-    }
 
 public Track AlignNotesInBeat(Track _track)
 {
@@ -217,21 +329,8 @@ public Track AlignNotesInBeat(Track _track)
     return _track;
 }
 
-public static class NoteMath
-{
-    public static float GetLengthFactor(NoteLengthType type)
-    {
-        switch (type)
-        {
-            case NoteLengthType.Semibreve: return 4f;
-            case NoteLengthType.Minima: return 2f;
-            case NoteLengthType.Seminima: return 1f;
-            case NoteLengthType.Colcheia: return 0.5f;
-            case NoteLengthType.Semicolcheia: return 0.25f;
-            default: return 1f;
-        }
-    }
-}
+
+   
 
 
 }

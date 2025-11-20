@@ -10,10 +10,10 @@ public class moveInBPM : MonoBehaviour
     float barDuration;
 
     float beatDuration; // duração de uma batida em segundos
-    float speed;        // velocidade em unidades/segundo
+    public float speed;        // velocidade em unidades/segundo
 
     void Start()
-    {
+    {/*
         bpm = beatMapController.controller.track.bpm;
         beatsInBar = beatMapController.controller.beatsInBar;
         barDuration = beatMapController.controller.barDuration;
@@ -22,7 +22,7 @@ public class moveInBPM : MonoBehaviour
         beatDuration = barDuration / beatsInBar;
 
         // velocidade = distância por beat ÷ tempo de cada beat
-        speed = distancePerBeat / beatDuration;
+        speed = distancePerBeat / beatDuration;*/
     }
 
     void Update()
