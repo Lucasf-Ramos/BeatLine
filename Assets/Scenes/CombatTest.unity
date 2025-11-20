@@ -930,9 +930,9 @@ MonoBehaviour:
   skinWidth: -0.02
   stickToGround: 1
   gravity: -25
+  maxFallSpeed: -40
   isGrounded: 0
   velocity: {x: 0, y: 0}
-  inputDirection: {x: 0, y: 0}
 --- !u!114 &1839735976
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1038,7 +1038,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::characterController
   move: {fileID: 0}
-  rb: {fileID: 0}
+  physics: {fileID: 0}
   input: {fileID: 0}
   anim: {fileID: 0}
 --- !u!50 &1839735978
@@ -1081,6 +1081,39 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::animationController
   controller: {fileID: 0}
+  animations:
+  - state: 1
+    priority: 1
+    clips:
+    - {fileID: 7400000, guid: 1246afdd6b34a0e4f9bb1182bb11d740, type: 2}
+    playbackSpeed: 1
+    loop: 1
+  - state: 4
+    priority: 5
+    clips:
+    - {fileID: 7400000, guid: 1b84c9dd8e4f95246baf723f2b0641c4, type: 2}
+    playbackSpeed: 1
+    loop: 0
+  - state: 8
+    priority: 4
+    clips:
+    - {fileID: 7400000, guid: 94b4b7f32c015784aadff1df95c33f57, type: 2}
+    playbackSpeed: 1
+    loop: 0
+  - state: 9
+    priority: 4
+    clips:
+    - {fileID: 7400000, guid: 87049b80c871ed14eb197a766c1d4cda, type: 2}
+    playbackSpeed: 1
+    loop: 0
+  - state: 5
+    priority: 4
+    clips:
+    - {fileID: 7400000, guid: 52b6297b689dcd748b11e3fc967dd5ec, type: 2}
+    playbackSpeed: 1
+    loop: 0
+  currentState: 0
+  currentClip: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

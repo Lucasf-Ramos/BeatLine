@@ -19,18 +19,40 @@ public class moviments : MonoBehaviour
 
     public void dash(Vector2 direction)
     {
+       
+        /*
+        direction   facingTo    AplyDashforceTo
+        1      *      1           1
+        -1     *     1           -1
+        1      *    -1          -1
+        -1     *     -1          1
+        
+        */
+
         if (dashCoroutine == null)
         {
-            if(direction.x > 0)
-                dashCoroutine = StartCoroutine(dashing(direction));
+            if(direction.x * facingTo().x > 0)
+                dashCoroutine = StartCoroutine(dashing(facingTo()));
             else
-                dashCoroutine = StartCoroutine(dodge(direction));
+                dashCoroutine = StartCoroutine(dodge(-facingTo()));
 
         }
     }
+
+    public void roteteCharacter(Vector2 direction)
+    {
+        Vector2 newRotate = new Vector2(0, direction.x>1?0:180);
+        transform.eulerAngles = newRotate;
+    }   
+    public Vector2 facingTo()
+    {
+        return new Vector2(transform.eulerAngles.y>0?-1:1,0);
+    }
+
     IEnumerator dashing(Vector2 direction)
     {
-        controller.anim.dash();
+        //controller.anim.dash();
+        controller.anim.Play(steteMachine.Dash);
 
         float initialX = transform.position.x;
         float targetX   = initialX + (dashDistance * direction.x);
@@ -40,7 +62,7 @@ public class moviments : MonoBehaviour
         // dashSpeed agora significa apenas "quão rápido chega"
 
         // Desliga a física horizontal durante o dash
-        controller.rb.velocity = new Vector2(0, controller.rb.velocity.y);
+        controller.physics.velocity = new Vector2(0, controller.physics.velocity.y);
 
         while (time < duration)
         {
@@ -51,12 +73,7 @@ public class moviments : MonoBehaviour
 
             float newX = Mathf.Lerp(initialX, targetX, curved);
 
-            // Movimento por posição → destino sempre preciso
-            transform.position = new Vector3(
-                newX,
-                transform.position.y,
-                transform.position.z
-            );
+             controller.physics.rb.MovePosition(new Vector2(newX, controller.physics.rb.position.y));
 
             yield return new WaitForFixedUpdate();
         }
@@ -68,7 +85,8 @@ public class moviments : MonoBehaviour
     }
     IEnumerator dodge(Vector2 direction)
     {
-        controller.anim.dodge();
+        //controller.anim.dodge();
+        controller.anim.Play(steteMachine.Dodge);
 
         float initialX = transform.position.x;
         float targetX   = initialX + (dodgeDistance * direction.x);
@@ -78,7 +96,7 @@ public class moviments : MonoBehaviour
         // dashSpeed agora significa apenas "quão rápido chega"
 
         // Desliga a física horizontal durante o dash
-        controller.rb.velocity = new Vector2(0, controller.rb.velocity.y);
+        controller.physics.velocity = new Vector2(0, controller.physics.velocity.y);
 
         while (time < duration)
         {
